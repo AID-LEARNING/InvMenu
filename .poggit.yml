@@ -2,6 +2,7 @@
 branches:
 - "4.0"
 - master
+- pm5
 projects:
   InvMenu:
     model: virion
