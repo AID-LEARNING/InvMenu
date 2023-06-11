@@ -17,7 +17,7 @@ final class InvMenuTypeHelper{
 	public const NETWORK_WORLD_Y_MAX = 320;
 
 	public static function getBlockOffset(Player $player) : Vector3{
-        return $player->getPosition()->floor()->add(0, -1, 0);
+        return $player->getPosition()->floor()->add(0, -2, 0);
 	}
 
 	public static function isValidYCoordinate(float $y) : bool{
