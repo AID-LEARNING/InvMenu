@@ -40,18 +40,16 @@ final class PlayerSession{
 	 * @param (Closure(bool) : void)|null $callback
 	 */
 	public function setCurrentMenu(?InvMenuInfo $current, ?Closure $callback = null) : void{
-		if($this->current !== null){
-			$this->current->graphic->remove($this->player);
-		}
+        $this->current?->graphic->remove($this->player);
 
 		$this->current = $current;
 
 		if($this->current !== null){
-			$current_id = spl_object_id($this->current);
+			$current_id = $this->current->spl_id;
 			$this->current->graphic->send($this->player, $this->current->graphic_name);
 			$this->network->waitUntil(PlayerNetwork::DELAY_TYPE_OPERATION, $this->current->graphic->getAnimationDuration(), function(bool $success) use($callback, $current_id) : bool{
 				$current = $this->current;
-				if($current !== null && spl_object_id($current) === $current_id){
+				if($current !== null && $current->spl_id === $current_id){
 					if($success){
 						$this->network->onBeforeSendMenu($this, $current);
 						$result = $current->graphic->sendInventory($this->player, $current->menu->getInventory());

@@ -132,7 +132,7 @@ final class PlayerNetwork{
 				return false;
 			}
 
-			$elapsed_ms += (microtime(true) * 1000) - $this->current->sent_at;
+			$elapsed_ms += (hrtime(true) * 1e6) - $this->current->sent_at;
 			if(!$success || $elapsed_ms >= $wait_ms){
 				$then($success);
 				return false;
@@ -150,8 +150,8 @@ final class PlayerNetwork{
 		$this->current = $entry;
 		if($entry !== null){
 			unset($this->entry_types[spl_object_id($entry)]);
-			if($this->network_session->sendDataPacket(NetworkStackLatencyPacket::create($entry->network_timestamp, true))){
-				$entry->sent_at = microtime(true) * 1000;
+			if($this->network_session->sendDataPacket(NetworkStackLatencyPacket::request($entry->network_timestamp))){
+				$entry->sent_at = hrtime(true) * 1e6;
 			}else{
 				$this->processCurrent(false);
 			}
