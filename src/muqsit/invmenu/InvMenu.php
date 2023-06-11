@@ -105,41 +105,42 @@ class InvMenu implements InvMenuTypeIds{
 	final public function send(Player $player, ?string $name = null, ?Closure $callback = null) : void{
 		$player->removeCurrentWindow();
 
-		$session = InvMenuHandler::getPlayerManager()->get($player);
-		$network = $session->network;
 
-		// Avoid players from spamming InvMenu::send() and other similar
-		// requests and filling up queued tasks in memory.
-		// It would be better if this check were implemented by plugins,
-		// however I suppose it is more convenient if done within InvMenu...
-		if($network->getPending() >= 8){
-			$network->dropPending();
-		}else{
-			$network->dropPendingOfType(PlayerNetwork::DELAY_TYPE_OPERATION);
-		}
+        $session = InvMenuHandler::getPlayerManager()->get($player);
+        $network = $session->network;
 
-		$network->waitUntil(PlayerNetwork::DELAY_TYPE_OPERATION, 0, function(bool $success) use($player, $session, $name, $callback) : bool{
-			if(!$success){
-				if($callback !== null){
-					$callback(false);
-				}
-				return false;
-			}
+        // Avoid players from spamming InvMenu::send() and other similar
+        // requests and filling up queued tasks in memory.
+        // It would be better if this check were implemented by plugins,
+        // however I suppose it is more convenient if done within InvMenu...
+        if($network->getPending() >= 1){
+            $network->dropPending();
+        }else{
+            $network->dropPendingOfType(PlayerNetwork::DELAY_TYPE_OPERATION);
+        }
 
-			$graphic = $this->type->createGraphic($this, $player);
-			if($graphic !== null){
-				$session->setCurrentMenu(new InvMenuInfo($this, $graphic, $name), static function(bool $success) use($callback) : void{
-					if($callback !== null){
-						$callback($success);
-					}
-				});
-			}else{
-				if($callback !== null){
-					$callback(false);
-				}
-			}
-			return false;
-		});
+        $network->waitUntil(PlayerNetwork::DELAY_TYPE_OPERATION, 0, function(bool $success) use($player, $session, $name, $callback) : bool{
+            if(!$success){
+                if($callback !== null){
+                    $callback(false);
+                }
+                return false;
+            }
+
+            $graphic = $this->type->createGraphic($this, $player);
+            if($graphic !== null){
+                $session->setCurrentMenu(new InvMenuInfo($this, $graphic, $name), static function(bool $success) use($callback) : void{
+                    if($callback !== null){
+                        $callback($success);
+                    }
+                });
+            }else{
+                if($callback !== null){
+                    $callback(false);
+                }
+            }
+            return false;
+        });
 	}
 
 	public function getInventory() : Inventory{
