@@ -46,9 +46,15 @@ final class InvMenuEventHandler implements Listener{
 
 		$current = $session->getCurrent();
 		if($current !== null && $event->getInventory() === $current->menu->getInventory()){
+            $start = microtime(true);
 			$current->menu->onClose($player);
+            var_dump("onClose: " . (microtime(true) - $start));
 		}
-		//$session->network->waitUntil(PlayerNetwork::DELAY_TYPE_ANIMATION_WAIT, 325, static fn(bool $success) : bool => false);
+/*
+$start = microtime(true);
+$session->network->waitUntil(PlayerNetwork::DELAY_TYPE_ANIMATION_WAIT, 325, static fn(bool $success) : bool => false);
+var_dump("waitUntil: " . (microtime(true) - $start));
+*/
 	}
 
 	/**
