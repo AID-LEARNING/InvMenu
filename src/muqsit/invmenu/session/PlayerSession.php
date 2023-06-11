@@ -47,6 +47,7 @@ final class PlayerSession{
 		if($this->current !== null){
 			$current_id = $this->current->spl_id;
 			$this->current->graphic->send($this->player, $this->current->graphic_name);
+            $start = microtime(true);
 			$this->network->waitUntil(PlayerNetwork::DELAY_TYPE_OPERATION, $this->current->graphic->getAnimationDuration(), function(bool $success) use($callback, $current_id) : bool{
 				$current = $this->current;
 				if($current !== null && $current->spl_id === $current_id){
@@ -68,13 +69,16 @@ final class PlayerSession{
 				}
 				return false;
 			});
+            var_dump("waitUntil in PlayerSession setCurrentMenu: " . (microtime(true) - $start));
 		}else{
+            $start = microtime(true);
 			$this->network->wait(PlayerNetwork::DELAY_TYPE_ANIMATION_WAIT, static function(bool $success) use($callback) : bool{
 				if($callback !== null){
 					$callback($success);
 				}
 				return false;
 			});
+            var_dump("wait in PlayerSession setCurrentMenu: " . (microtime(true) - $start));
 		}
 	}
 

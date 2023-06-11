@@ -50,11 +50,11 @@ final class InvMenuEventHandler implements Listener{
 			$current->menu->onClose($player);
             var_dump("onClose: " . (microtime(true) - $start));
 		}
-/*
+
 $start = microtime(true);
 $session->network->waitUntil(PlayerNetwork::DELAY_TYPE_ANIMATION_WAIT, 325, static fn(bool $success) : bool => false);
 var_dump("waitUntil: " . (microtime(true) - $start));
-*/
+
 	}
 
 	/**
