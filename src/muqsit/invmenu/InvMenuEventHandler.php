@@ -48,12 +48,9 @@ final class InvMenuEventHandler implements Listener{
 		if($current !== null && $event->getInventory() === $current->menu->getInventory()){
             $start = microtime(true);
 			$current->menu->onClose($player);
-            var_dump("onClose: " . (microtime(true) - $start));
 		}
 
-$start = microtime(true);
 $session->network->waitUntil(PlayerNetwork::DELAY_TYPE_ANIMATION_WAIT, 325, static fn(bool $success) : bool => false);
-var_dump("waitUntil: " . (microtime(true) - $start));
 
 	}
 
@@ -79,7 +76,7 @@ var_dump("waitUntil: " . (microtime(true) - $start));
 			}
 
 			$result = $current->menu->handleInventoryTransaction($player, $action->getSourceItem(), $action->getTargetItem(), $action, $transaction);
-			$network_stack_callback = $result->post_transaction_callback;
+			$network_stack_callback = $result->getPostTransactionCallback();
 			if($network_stack_callback !== null){
 				$network_stack_callbacks[] = $network_stack_callback;
 			}
@@ -89,7 +86,7 @@ var_dump("waitUntil: " . (microtime(true) - $start));
 			}
 		}
 
-		if(count($network_stack_callbacks) > 0){
+		if(count($network_stack_callbacks) !== 0){
 			$player_instance->network->wait(PlayerNetwork::DELAY_TYPE_ANIMATION_WAIT, static function(bool $success) use($player, $network_stack_callbacks) : bool{
 				if($success){
 					foreach($network_stack_callbacks as $callback){

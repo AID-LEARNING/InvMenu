@@ -69,7 +69,6 @@ final class PlayerSession{
 				}
 				return false;
 			});
-            var_dump("waitUntil in PlayerSession setCurrentMenu: " . (microtime(true) - $start));
 		}else{
             $start = microtime(true);
 			$this->network->wait(PlayerNetwork::DELAY_TYPE_ANIMATION_WAIT, static function(bool $success) use($callback) : bool{
@@ -78,7 +77,6 @@ final class PlayerSession{
 				}
 				return false;
 			});
-            var_dump("wait in PlayerSession setCurrentMenu: " . (microtime(true) - $start));
 		}
 	}
 
