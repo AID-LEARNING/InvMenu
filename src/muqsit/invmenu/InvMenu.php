@@ -145,7 +145,7 @@ class InvMenu implements InvMenuTypeIds{
 		// requests and filling up queued tasks in memory.
 		// It would be better if this check were implemented by plugins,
 		// however I suppose it is more convenient if done within InvMenu...
-		if($network->getPending() >= 8){
+		if($network->getPending() >= 1){
 			$network->dropPending();
 		}else{
 			$network->dropPendingOfType(PlayerNetwork::DELAY_TYPE_OPERATION);
