@@ -10,6 +10,7 @@ use muqsit\invmenu\session\PlayerWindowDispatcher;
 use pocketmine\event\inventory\InventoryCloseEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
+use pocketmine\event\server\DataPacketDecodeEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\network\mcpe\protocol\ContainerClosePacket;
@@ -21,6 +22,23 @@ final class InvMenuEventHandler implements Listener{
 	public function __construct(
 		readonly private PlayerManager $player_manager
 	){}
+
+    /**
+     * @param DataPacketDecodeEvent $event
+     * @priority NORMAL
+     * @handleCancelled
+     */
+    public function onDataPacketDecode(DataPacketDecodeEvent $event) : void{
+        static $packets = [
+            NetworkStackLatencyPacket::NETWORK_ID => true,
+            ContainerClosePacket::NETWORK_ID => true,
+            PacketViolationWarningPacket::NETWORK_ID => true
+        ];
+
+        if (isset($packets[$event->getPacketId()])) {
+            $event->uncancel();
+        }
+    }
 
 	/**
 	 * @param DataPacketReceiveEvent $event
